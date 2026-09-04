@@ -1,40 +1,34 @@
 # Codex Dock Quota Badge
 
-把 Codex 主使用限额的真实剩余百分比，直接画进 macOS 正式 Codex 的 Dock 图标。
+把 Codex 主使用限额的真实剩余百分比，直接画进 macOS 正式 Codex 的 Dock 图标。提供数字版和线框版两种显示模式。
 
-![正式 Codex 中的真实运行效果](evidence/native-badge-live.png)
+## 效果
 
-Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换。
+### 数字版
 
-提供两种可以随时切换的显示方式：
+直接显示剩余百分比数字，并用下方余量条辅助查看。
 
-- `numeric`：原来的数字百分比与余量条，默认保留。
-- `ring`：沿图标外沿显示连续玻璃轨道；`≥50%` 为绿色、`20%–49%` 为黄色、`<20%` 为红色，每经过一个角代表 25%。
+![数字版在真实 Dock 中的使用效果](evidence/native-badge-live.png)
 
-切换只会重绘图标，不重新修改 Codex App，也不需要重新授权：
+### 线框版
 
-```zsh
-./scripts/set-style.sh numeric
-./scripts/set-style.sh ring
-```
+通过贴合图标外沿的连续线框显示剩余额度，每经过一个角代表 25%。`≥50%` 为绿色、`20%–49%` 为黄色、`<20%` 为红色。
 
-## 两个安装入口
+![线框版在真实 Dock 中的使用效果](evidence/ring-mode-live.png)
 
-两种样式共用同一个安全安装流程，只是首次启动时显示不同；不会安装两份 Codex：
+不同剩余额度下的线框状态：
 
-```zsh
-# 数字版：百分比数字 + 余量条
-./scripts/install-numeric.sh
+| 100% | 75% | 50% | 25% | 15% |
+| --- | --- | --- | --- | --- |
+| ![100% 绿色完整线框](evidence/ring-state-100.png) | ![75% 绿色线框](evidence/ring-state-75.png) | ![50% 绿色线框](evidence/ring-state-50.png) | ![25% 黄色线框](evidence/ring-state-25.png) | ![15% 红色线框](evidence/ring-state-15.png) |
 
-# 线框版：绿/黄/红玻璃轨道
-./scripts/install-ring.sh
-```
-
-如果由正在运行的 Codex 自助安装，在预检通过后给所选入口追加 `--allow-running`。安装完成并重启 Codex 后，仍可使用 `scripts/set-style.sh` 随时切换。
+Dock 放大或缩小时，图标与额度显示会作为一个整体变化。两种模式共用同一套安装和额度读取能力，安装后可以随时互相切换。
 
 > 当前是公开测试版，只支持 `compatibility/releases.tsv` 中明确列出的 Codex 版本。它会修改并重新签名本机 Codex App；安装前自动保存可校验的官方原版备份。
 
 ## 使用方式
+
+### 如果你想使用数字版
 
 复制下面这段话，交给你的 Codex：
 
@@ -46,6 +40,24 @@ https://github.com/Katao123/codex-dock-quota-badge
 请克隆仓库，进入仓库后完整阅读并遵守 AGENTS.md，使用 scripts/install-numeric.sh 完成环境检查、备份、安装、重启和验收。不要重新实现另一套方案，不要强行支持不兼容版本。需要 macOS 权限时再告诉我具体点哪里。
 
 最终只能留下一个正式 Codex；必须显示真实余量、同步缩放、没有红色未读角标，并保留恢复官方原版的能力。
+
+完成后请告诉我当前余量和验证结果，并明确说明：以后我只需对 Codex 说“请切换成线框版”，它就会自动切换。
+```
+
+### 如果你想使用线框版
+
+复制下面这段话，交给你的 Codex：
+
+```text
+请帮我安装这个项目提供的 Codex Dock 剩余额度角标，首次使用线框版：
+
+https://github.com/Katao123/codex-dock-quota-badge
+
+请克隆仓库，进入仓库后完整阅读并遵守 AGENTS.md，使用 scripts/install-ring.sh 完成环境检查、备份、安装、重启和验收。不要重新实现另一套方案，不要强行支持不兼容版本。需要 macOS 权限时再告诉我具体点哪里。
+
+最终只能留下一个正式 Codex；必须沿图标外沿显示真实余量，正确使用绿、黄、红三档颜色，同步缩放，没有红色未读角标，并保留恢复官方原版的能力。
+
+完成后请告诉我当前余量和验证结果，并明确说明：以后我只需对 Codex 说“请切换成数字版”，它就会自动切换。
 ```
 
 完整版本见 [COPY_PROMPT.zh-CN.md](COPY_PROMPT.zh-CN.md)。
@@ -56,9 +68,7 @@ https://github.com/Katao123/codex-dock-quota-badge
 | --- | --- |
 | `scripts/preflight.sh` | 只读检查系统、签名、版本、哈希和补丁兼容性 |
 | `scripts/build.sh` | 从公开 Swift 源码构建后台额度采集器 |
-| `scripts/install.sh` | 创建备份、安装补丁和后台任务 |
-| `scripts/install-numeric.sh` | 数字版首次安装入口 |
-| `scripts/install-ring.sh` | 线框版首次安装入口 |
+| `scripts/install*.sh` | 根据提示选择首次样式，并创建备份、安装补丁和后台任务 |
 | `scripts/verify.sh` | 检查真实余量、补丁、后台任务和唯一正式 Codex |
 | `scripts/status.sh` | 只读查看当前状态 |
 | `scripts/set-style.sh` | 在数字模式和外沿环模式之间切换 |
