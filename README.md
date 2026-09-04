@@ -4,13 +4,13 @@
 
 ![正式 Codex 中的真实运行效果](evidence/native-badge-live.png)
 
-Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换，因此不会出现外部悬浮贴片追赶、脱离或漂到屏幕中间的问题。
+Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换。
 
 > 当前是公开测试版，只支持 `compatibility/releases.tsv` 中明确列出的 Codex 版本。它会修改并重新签名本机 Codex App；安装前自动保存可校验的官方原版备份。
 
-## 最简单的使用方式
+## 使用方式
 
-你不需要安装 Skill，也不需要自己运行命令。复制下面这段话，交给你 Mac 上的 Codex：
+复制下面这段话，交给你的 Codex：
 
 ```text
 请帮我安装这个项目提供的 Codex Dock 剩余额度角标：
@@ -41,9 +41,7 @@ https://github.com/Katao123/codex-dock-quota-badge
 - 一个正式 Codex App，也是唯一可见的 Codex。
 - 一个无窗口、无 Dock 图标的本地额度采集进程。
 - 一个只负责检测 Codex 更新的后台任务；它只提醒，不自动修改新版本。
-- 一份位于 `~/Library/Application Support/Codex Dock Quota Badge/backups` 的官方原版备份。
-
-不会留下测试 App、额外 Dock 图标或外部悬浮窗口。
+- 一份用于恢复官方程序文件和 OpenAI 签名的原版备份，不包含账号、聊天记录或 API Key。
 
 ## 数据与隐私
 
