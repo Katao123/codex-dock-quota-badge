@@ -17,14 +17,19 @@ expected_hash=$(badge_state_value "$state_path" PatchedAsarSHA256)
 /usr/bin/grep -a -F 'setBadgeCount(0)' "$asar_path" >/dev/null || badge_die '红色未读角标抑制未生效'
 
 user_domain="gui/$(/usr/bin/id -u)"
-/usr/bin/launchctl print "$user_domain/com.local.codex-dock-quota-feed" >/dev/null \
+/bin/launchctl print "$user_domain/com.local.codex-dock-quota-feed" >/dev/null \
   || badge_die '额度后台未加载'
-/usr/bin/launchctl print "$user_domain/com.local.codex-dock-quota-update-check" >/dev/null \
+/bin/launchctl print "$user_domain/com.local.codex-dock-quota-update-check" >/dev/null \
   || badge_die '升级检测未加载'
 [[ -s /tmp/codex-quota.png ]] || badge_die '额度图标尚未生成'
 percent=$(/bin/cat /tmp/codex-quota-percent.txt | /usr/bin/tr -dc '0-9')
 [[ "$percent" == <-> && "$percent" -ge 0 && "$percent" -le 100 ]] \
   || badge_die '真实余量尚未生成'
+style=$(/bin/cat "$support_root/style" 2>/dev/null | /usr/bin/tr -d '[:space:]' || true)
+case "$style" in
+  numeric|ring) ;;
+  *) badge_die '显示方式配置无效' ;;
+esac
 
 typeset -a matching_apps
 local_app=''
@@ -39,6 +44,7 @@ done
 
 badge_info 'verify=PASS_MACHINE_CHECKS'
 badge_info "remaining_percent=$percent"
+badge_info "style=$style"
 badge_info "visible_codex_apps=${#matching_apps}"
 badge_info "official_app=${matching_apps[1]}"
 badge_info 'visual_check=请在真实 Dock 中确认角标位置与同步缩放'

@@ -14,8 +14,8 @@ update_agent="$launch_agents/com.local.codex-dock-quota-update-check.plist"
 if [[ -f "$state_path" ]]; then
   "$script_dir/restore.sh"
 fi
-/usr/bin/launchctl bootout "$user_domain" "$feed_agent" 2>/dev/null || true
-/usr/bin/launchctl bootout "$user_domain" "$update_agent" 2>/dev/null || true
+/bin/launchctl bootout "$user_domain" "$feed_agent" 2>/dev/null || true
+/bin/launchctl bootout "$user_domain" "$update_agent" 2>/dev/null || true
 /bin/rm -f "$feed_agent" "$update_agent" /tmp/codex-quota.png /tmp/codex-quota-percent.txt
 /bin/rm -rf "$support_root/runtime"
 badge_info 'uninstall=PASS'

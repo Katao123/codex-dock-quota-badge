@@ -7,13 +7,13 @@ Codex account usage
 local `codex app-server`
         |
         v
-background quota feed -- percentage changed --> atomic PNG replacement
+background quota feed -- percentage/style changed --> atomic PNG replacement
                                                    |
                                                    v
 patched Codex main process -- setIcon --> native macOS Dock tile
 ```
 
-The background process polls every 30 seconds and also accepts App Server update notifications. It redraws only when the rounded integer percentage changes.
+The background process polls every 30 seconds and also accepts App Server update notifications. It can render either the numeric badge or the glass perimeter track into the same PNG output. Switching style restarts only this background renderer; it does not patch the app again.
 
 The Codex patch makes four narrowly checked substitutions in the Electron main bundle:
 

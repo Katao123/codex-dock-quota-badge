@@ -6,6 +6,32 @@
 
 Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换。
 
+提供两种可以随时切换的显示方式：
+
+- `numeric`：原来的数字百分比与余量条，默认保留。
+- `ring`：沿图标外沿显示连续玻璃轨道；`≥50%` 为绿色、`20%–49%` 为黄色、`<20%` 为红色，每经过一个角代表 25%。
+
+切换只会重绘图标，不重新修改 Codex App，也不需要重新授权：
+
+```zsh
+./scripts/set-style.sh numeric
+./scripts/set-style.sh ring
+```
+
+## 两个安装入口
+
+两种样式共用同一个安全安装流程，只是首次启动时显示不同；不会安装两份 Codex：
+
+```zsh
+# 数字版：百分比数字 + 余量条
+./scripts/install-numeric.sh
+
+# 线框版：绿/黄/红玻璃轨道
+./scripts/install-ring.sh
+```
+
+如果由正在运行的 Codex 自助安装，在预检通过后给所选入口追加 `--allow-running`。安装完成并重启 Codex 后，仍可使用 `scripts/set-style.sh` 随时切换。
+
 > 当前是公开测试版，只支持 `compatibility/releases.tsv` 中明确列出的 Codex 版本。它会修改并重新签名本机 Codex App；安装前自动保存可校验的官方原版备份。
 
 ## 使用方式
@@ -13,11 +39,11 @@ Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换。
 复制下面这段话，交给你的 Codex：
 
 ```text
-请帮我安装这个项目提供的 Codex Dock 剩余额度角标：
+请帮我安装这个项目提供的 Codex Dock 剩余额度角标，首次使用数字版：
 
 https://github.com/Katao123/codex-dock-quota-badge
 
-请克隆仓库，进入仓库后完整阅读并遵守 AGENTS.md，使用仓库已经验证过的工具完成环境检查、备份、安装、重启和验收。不要重新实现另一套方案，不要强行支持不兼容版本。需要 macOS 权限时再告诉我具体点哪里。
+请克隆仓库，进入仓库后完整阅读并遵守 AGENTS.md，使用 scripts/install-numeric.sh 完成环境检查、备份、安装、重启和验收。不要重新实现另一套方案，不要强行支持不兼容版本。需要 macOS 权限时再告诉我具体点哪里。
 
 最终只能留下一个正式 Codex；必须显示真实余量、同步缩放、没有红色未读角标，并保留恢复官方原版的能力。
 ```
@@ -31,8 +57,11 @@ https://github.com/Katao123/codex-dock-quota-badge
 | `scripts/preflight.sh` | 只读检查系统、签名、版本、哈希和补丁兼容性 |
 | `scripts/build.sh` | 从公开 Swift 源码构建后台额度采集器 |
 | `scripts/install.sh` | 创建备份、安装补丁和后台任务 |
+| `scripts/install-numeric.sh` | 数字版首次安装入口 |
+| `scripts/install-ring.sh` | 线框版首次安装入口 |
 | `scripts/verify.sh` | 检查真实余量、补丁、后台任务和唯一正式 Codex |
 | `scripts/status.sh` | 只读查看当前状态 |
+| `scripts/set-style.sh` | 在数字模式和外沿环模式之间切换 |
 | `scripts/restore.sh` | 从校验过的备份恢复 OpenAI 官方 App |
 | `scripts/uninstall.sh` | 恢复官方 App 并移除后台组件，保留备份 |
 

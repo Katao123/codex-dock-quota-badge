@@ -7,6 +7,7 @@ source "$script_dir/lib/common.sh"
 
 support_root=${CODEX_DOCK_BADGE_SUPPORT_ROOT:-"$HOME/Library/Application Support/Codex Dock Quota Badge"}
 state_path="$support_root/installed-state.plist"
+style_path="$support_root/style"
 app_path=$(badge_find_app) || badge_die '找不到正式 Codex App'
 asar_path="$app_path/Contents/Resources/app.asar"
 current_hash=$(badge_sha256 "$asar_path")
@@ -38,9 +39,15 @@ else
   badge_info 'remaining_percent=unavailable'
 fi
 
+style=$(/bin/cat "$style_path" 2>/dev/null | /usr/bin/tr -d '[:space:]' || true)
+case "$style" in
+  numeric|ring) badge_info "style=$style" ;;
+  *) badge_info 'style=numeric (default)' ;;
+esac
+
 user_domain="gui/$(/usr/bin/id -u)"
 for label in com.local.codex-dock-quota-feed com.local.codex-dock-quota-update-check; do
-  if /usr/bin/launchctl print "$user_domain/$label" >/dev/null 2>&1; then
+  if /bin/launchctl print "$user_domain/$label" >/dev/null 2>&1; then
     badge_info "$label=loaded"
   else
     badge_info "$label=not_loaded"
