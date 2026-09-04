@@ -4,10 +4,6 @@
 
 ![正式 Codex 中的真实运行效果](evidence/native-badge-live.png)
 
-放大状态下的原生同步验证：
-
-![Dock 放大时仍作为整体](evidence/native-tile-magnified.png)
-
 Dock 放大或缩小时，图标与角标由 macOS 作为一个整体变换，因此不会出现外部悬浮贴片追赶、脱离或漂到屏幕中间的问题。
 
 > 当前是公开测试版，只支持 `compatibility/releases.tsv` 中明确列出的 Codex 版本。它会修改并重新签名本机 Codex App；安装前自动保存可校验的官方原版备份。
